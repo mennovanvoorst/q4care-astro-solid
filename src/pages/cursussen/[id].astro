@@ -1,0 +1,56 @@
+---
+import cms from '../../lib/contentful'
+import Layout from '../../layouts/Layout.astro'
+import {marked} from 'marked'
+
+export async function getStaticPaths() {
+  const courses = await cms.getEntries({
+    content_type: 'course'
+  })
+
+  return courses.items.map((course) => ({
+    params: {
+      id: course.sys.id
+    },
+    props: {
+      ...course.fields,
+      id: course.sys.id,
+      image: course.fields.image?.fields.file.url
+    }
+  }))
+}
+
+const { id } = Astro.params
+const { title, description, image } = Astro.props
+
+const content = marked.parse(description)
+
+export const prerender = true
+---
+
+<Layout title={`${title} | Q4Care`}>
+  <div class='grid lg:grid-cols-6 lg:grid-row-1 gap-6 lg:gap-12'>
+    <div class='lg:col-span-3'>
+      <div>
+        <img
+          src={image}
+          alt=''
+          class='object-cover object-center bg-repeat rounded-3xl'
+        />
+
+        <a
+          href={`/contact?subject=cursus: ${title}`}
+          class='btn block text-center mt-4 w-full'
+          >Neem contact op over deze cursus</a
+        >
+      </div>
+    </div>
+    <div class='lg:col-span-3 py-6'>
+      <h1 class='text-2xl text-gray-900 sm:text-3xl'>
+        {title}
+      </h1>
+
+      <div set:html={content} class='[&_p]:py-2 [&_ul]:list-disc' />
+    </div>
+  </div>
+</Layout>

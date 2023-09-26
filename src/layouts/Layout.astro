@@ -1,0 +1,109 @@
+---
+import classNames from 'classnames'
+import '../assets/base.css'
+import '@tabler/icons-webfont/tabler-icons.min.css'
+
+const { title } = Astro.props
+---
+
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' /><meta
+      name='viewport'
+      content='width=device-width, initial-scale=1'
+    /><meta name='generator' content={Astro.generator} /><link
+      rel='icon'
+      type='image/svg+xml'
+      href='/favicon.svg'
+    /><title>{title}</title></head
+  >
+
+  <link rel='preconnect' href='https://fonts.googleapis.com' />
+  <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
+  <link
+    href='https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap'
+    rel='stylesheet'
+  />
+
+  <body class='bg-white'>
+    <header class='fixed w-full bg-white top-0 z-50'>
+      <nav class='flex justify-between items-center p-6 md:px-8'>
+        <a href='/'
+          ><img src='/logo.png' alt='Q4Care logo' class='h-8 w-auto' /></a
+        >
+
+        <div
+          id='navigation'
+          class={classNames(
+            'flex flex-col fixed top-0 left-0 h-screen mt-[80px] w-full bg-white p-6 transform transition-transform -translate-x-full',
+            'md:bg-transparent md:h-auto md:relative md:flex-row md:mt-0 md:p-0 md:translate-x-0'
+          )}
+        >
+          <div
+            class={classNames(
+              'flex flex-col justify-start items-start gap-6 pb-8 text-base text-gray-900',
+              'md:flex-row md:flex-1 md:items-center md:justify-center md:py-0 md:gap-12'
+            )}
+          >
+            <a href='/cursussen'>Cursussen</a>
+            <a href='/contact'>Contact</a>
+            <a href='/voorwaarden'>Algemene voorwaarden</a>
+          </div>
+
+          <div
+            class={classNames(
+              'flex border-t border-gray-200 py-8',
+              'md:border-0 md:py-0'
+            )}
+          >
+            <a
+              href='https://portaal.q4care-opleidingen.nl'
+              target='_blank'
+              class='btn'>Portaal</a
+            >
+          </div>
+        </div>
+
+        <button id='menu' class='md:hidden'
+          ><i class='ti ti-menu-2 text-3xl' id='menuIcon'></i></button
+        >
+      </nav>
+    </header>
+  </body>
+
+  <main class='container px-6 mx-auto pt-32 lg:pt-24'><slot /></main>
+
+  <footer class='my-20 text-center text-gray-500'>
+    <p>Copyright © 2023 Q4Care</p>
+    <p class='text-sm'>
+      Website door <a href='https://vanvoor.st' target='_blank'>vanvoor.st</a>
+    </p>
+  </footer>
+</html>
+
+<script>
+  const menuButton = document.getElementById('menu')
+  const menuIcon = document.getElementById('menuIcon')
+  const navigation = document.getElementById('navigation')
+  let visible = false
+
+  function toggleMenu() {
+    if (!navigation || !menuIcon) return
+
+    visible = !visible
+
+    if (visible) {
+      navigation.classList.add('translate-x-0')
+      navigation.classList.remove('-translate-x-full')
+      menuIcon.classList.add('ti-x')
+      menuIcon.classList.remove('ti-menu-2')
+    } else {
+      navigation.classList.remove('translate-x-0')
+      navigation.classList.add('-translate-x-full')
+      menuIcon.classList.remove('ti-x')
+      menuIcon.classList.add('ti-menu-2')
+    }
+  }
+
+  menuButton && menuButton.addEventListener('click', toggleMenu)
+</script>

@@ -1,0 +1,128 @@
+---
+import cms from '../lib/contentful'
+import Layout from '../layouts/Layout.astro'
+import PageHeader from '../components/PageHeader'
+import Courses from '../components/Courses'
+import Alert from '../components/Alert'
+import {marked} from 'marked'
+import sendGrid from '../lib/sendgrid'
+
+import type { TypePageHeaderSkeleton, TypeCourseSkeleton } from '../types'
+
+if (Astro.request.method === 'POST') {
+  try {
+    const data = await Astro.request.formData()
+    const name = data.get('name')
+    const email = data.get('email')
+    const phone = data.get('phone')
+    const subject = data.get('subject')
+    const message = data.get('message')
+
+    const msg = {
+      to: 'menno@vanvoor.st',
+      from: 'info@q4care-opleidingen.nl',
+      replyTo: { email: email, name: name },
+      subject: subject,
+      text: `
+        Naam: ${name}
+        Email: ${email}
+        Telefoonnummer: ${phone}
+        Onderwerp: ${subject}
+
+        Bericht: ${message}
+      `
+    }
+
+    await sendGrid.send(msg)
+    return Astro.redirect('/contact?submit=success')
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message)
+    }
+    return Astro.redirect('/contact?submit=fail')
+  }
+}
+
+const pageHeader = await cms.getEntry<TypePageHeaderSkeleton>(
+  'RkvS4di3dSv082yE0090f'
+)
+
+const paragraph = await cms.getEntry('3GrcEjN1pBS0ZkatAatRtX')
+
+const content = marked.parse(paragraph.fields.content)
+const submit = Astro.url.searchParams.get('submit')! || ''
+const subject = Astro.url.searchParams.get('subject')! || ''
+
+export const prerender = true
+---
+
+<Layout title='Contact | Q4Care'>
+  <div class='grid grid-cols-1 lg:grid-cols-2'>
+    <div>
+      <PageHeader
+        title={pageHeader.fields.title}
+        description={pageHeader.fields.description}
+      />
+
+      <div set:html={content} class='[&_p]:py-2' />
+    </div>
+
+    <form class='p-0 py-12 lg:p-12' method='POST'>
+      {
+        submit && (
+          <Alert
+            type={submit}
+            content={{
+              success: 'Je bericht is succesvol verstuurd!',
+              fail: 'Er ging iets mis en je bericht is niet verzonden. Probeer het opnieuw.'
+            }}
+          />
+        )
+      }
+      <label class='form__input'>
+        Naam <span class='text-xs text-red-500'>*</span>
+        <input placeholder='Naam' name='name' class='input' required />
+      </label>
+
+      <label class='form__input'>
+        Email <span class='text-xs text-red-500'>*</span>
+        <input
+          type='email'
+          placeholder='Email'
+          name='email'
+          class='input'
+          required
+        />
+      </label>
+
+      <label class='form__input'>
+        Telefoonnummer:
+        <input placeholder='Telefoonnummer' name='phone' class='input' />
+      </label>
+
+      <label class='form__input'>
+        Onderwerp <span class='text-xs text-red-500'>*</span>
+        <input
+          placeholder='Onderwerp van het bericht'
+          name='subject'
+          class='input'
+          value={subject}
+          required
+        />
+      </label>
+
+      <label class='form__input'>
+        Bericht <span class='text-xs text-red-500'>*</span>
+        <textarea
+          cols='40'
+          rows='10'
+          placeholder='Jouw bericht'
+          name='message'
+          class='input'
+          required></textarea>
+      </label>
+
+      <button type='submit' class='btn'>Verstuur bericht</button>
+    </form>
+  </div>
+</Layout>

@@ -1,0 +1,77 @@
+---
+import cms from '../lib/contentful'
+import Layout from '../layouts/Layout.astro'
+import Hero from '../components/Hero'
+import Features from '../components/Features'
+import TextBlock from '../components/TextBlock'
+import ImageBlock from '../components/ImageBlock'
+
+import type {
+  TypeHeroSkeleton,
+  TypeFeaturesSkeleton,
+  TypeImageBlockSkeleton,
+  TypeTextBlockSkeleton
+} from '../types'
+
+const hero = await cms.getEntry<TypeHeroSkeleton>('6KzlGzlrALnAS1bch5sAG8')
+const features = await cms.getEntry<TypeFeaturesSkeleton>(
+  '70o6oHOKCoDSzeD85qY1AX'
+)
+const imageBlock = await cms.getEntry<TypeImageBlockSkeleton>(
+  'RnyiE2k5YLSaCw2QA1pee'
+)
+const featuresCards = await cms.getEntry<TypeFeaturesSkeleton>(
+  '5Y3IbwEvVIpu1bbwRQ8Kpg'
+)
+
+const textBlock = await cms.getEntry<TypeTextBlockSkeleton>(
+  '3LvDVJcgXPGLXOzeNDvWMP'
+)
+
+export const prerender = true
+---
+
+<Layout title='Q4Care'>
+  <Hero
+    title={hero.fields.title}
+    content={hero.fields.content}
+    image={hero.fields.image.fields.file.url}
+    button={{ label: hero.fields.buttonLabel, link: hero.fields.buttonLink }}
+    showButton={hero.fields.showButton}
+  />
+
+  <Features
+    title={features.fields.title}
+    content={features.fields.description}
+    features={features.fields.features.map(({ fields }) => ({
+      icon: fields.icon,
+      title: fields.title,
+      description: fields.description
+    }))}
+    type={features.fields.features[0].sys.contentType.sys.id}
+  />
+
+  <ImageBlock
+    description={imageBlock.fields.description}
+    image={imageBlock.fields.backgroundImage?.fields.file.url}
+    classes='my-16'
+  />
+
+  <Features
+    title={featuresCards.fields.title}
+    content={featuresCards.fields.description}
+    features={featuresCards.fields.features.map(({ fields }) => ({
+      icon: fields.icon,
+      title: fields.title,
+      description: fields.description
+    }))}
+    type={featuresCards.fields.features[0].sys.contentType.sys.id}
+  />
+
+  <TextBlock
+    title={textBlock.fields.title}
+    description={textBlock.fields.description}
+    label={textBlock.fields.label}
+    destination={textBlock.fields.destination}
+  />
+</Layout>
