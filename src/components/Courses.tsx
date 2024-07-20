@@ -1,8 +1,8 @@
 import Course from './Course'
-import TypeCourseFields from '../types'
+import { TypeCourseFields } from '../types.d'
 
 type Props = {
-  courses: TypeCourseFields
+  courses: TypeCourseFields[]
   classes?: string
 }
 

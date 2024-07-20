@@ -99,6 +99,7 @@ export type TypePageHeader<
 > = Entry<TypePageHeaderSkeleton, Modifiers, Locales>
 
 export interface TypeCourseFields {
+  di: EntryFieldTypes.Text
   title: EntryFieldTypes.Symbol
   description: EntryFieldTypes.Text
   image: EntryFieldTypes.AssetLink
