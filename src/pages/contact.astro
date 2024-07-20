@@ -2,12 +2,11 @@
 import cms from '../lib/contentful'
 import Layout from '../layouts/Layout.astro'
 import PageHeader from '../components/PageHeader'
-import Courses from '../components/Courses'
 import Alert from '../components/Alert'
 import {marked} from 'marked'
 import sendGrid from '../lib/sendgrid'
 
-import type { TypePageHeaderSkeleton, TypeCourseSkeleton } from '../types'
+import type { TypePageHeaderSkeleton, } from '../types'
 
 if (Astro.request.method === 'POST') {
   try {
