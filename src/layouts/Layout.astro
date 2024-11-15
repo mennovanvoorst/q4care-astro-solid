@@ -5,7 +5,8 @@ import '../assets/base.css'
 import '@tabler/icons-webfont/tabler-icons.min.css'
 
 const menuItems = await cms.getEntries({
-  content_type: 'menu'
+  content_type: 'menu',
+  order: ['fields.label']
 })
 
 const { title } = Astro.props
@@ -81,7 +82,7 @@ const { title } = Astro.props
   <main class='container px-6 mx-auto pt-32 lg:pt-24'><slot /></main>
 
   <footer class='my-20 text-center text-gray-500'>
-    <p>Copyright © 2023 Q4Care</p>
+    <p>Copyright © {new Date().getFullYear()} Q4Care</p>
     <p class='text-sm'>
       Website door <a href='https://vanvoor.st' target='_blank'>vanvoor.st</a>
     </p>

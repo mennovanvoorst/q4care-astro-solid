@@ -1,0 +1,36 @@
+---
+import cms from '../lib/contentful'
+import Layout from '../layouts/Layout.astro'
+import PageHeader from '../components/PageHeader'
+
+import { TypeFileFields, TypePageHeaderSkeleton } from '../types.d'
+
+const fileItems = await cms.getEntries({
+  content_type: 'file'
+})
+
+const pageHeader = await cms.getEntry<TypePageHeaderSkeleton>(
+  '7jPeZMowLGLir0r26ND4vI'
+)
+
+export const prerender = true
+---
+
+<Layout title='Cursussen | Q4Care'>
+  <PageHeader
+    title={pageHeader.fields.title}
+    description={pageHeader.fields.description}
+  />
+
+  <ul>
+    {
+      fileItems.items.map((item) => (
+        <li>
+          <a href={item.fields.file?.fields.file.url} target='_blank'>
+            {item.fields.name}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</Layout>

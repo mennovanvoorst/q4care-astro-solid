@@ -105,6 +105,11 @@ export interface TypeCourseFields {
   image: EntryFieldTypes.AssetLink
 }
 
+export interface TypeFileFields {
+  name: EntryFieldTypes.Symbol
+  file: EntryFieldTypes.AssetLink
+}
+
 export type TypeCourseSkeleton = EntrySkeletonType<TypeCourseFields, 'course'>
 export type TypeCourse<
   Modifiers extends ChainModifiers,
