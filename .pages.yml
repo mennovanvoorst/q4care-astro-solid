@@ -10,8 +10,9 @@ content:
     fields:
       - name: title
         label: Title
-        type: text
+        type: string
         options:
+          minLength: 5
           maxLength: 256
 
       - name: description
